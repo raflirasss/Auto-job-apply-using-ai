@@ -1,44 +1,344 @@
 # AI Job Hunter
 
-Personal AI job-discovery and application assistant. All six phases are implemented.
+Asisten pencari kerja pribadi: mencari lowongan, menilai kecocokan dengan CV kamu, membuat CV dan surat lamaran khusus, lalu melamar otomatis. Berjalan di komputer kamu sendiri (Windows).
 
-## Quick start (Windows)
+**Apa yang dilakukan aplikasi ini?**
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start.ps1
-```
+1. **Mencari lowongan** dari Google Alerts, channel Telegram, dan halaman karier perusahaan (Lever/Greenhouse).
+2. **Menilai** setiap lowongan: cocok atau tidak dengan CV kamu (skor 0–100).
+3. **Membuat CV dan surat lamaran khusus** untuk tiap lowongan (PDF dan Word).
+4. **Melamar otomatis** lewat email (kalau lowongan minta "kirim CV ke …") atau lewat form lamaran perusahaan.
+5. **Mencatat semua lamaran** supaya kamu bisa memantau statusnya.
 
-Opens http://localhost:3000. Password = `DASHBOARD_PASSWORD` in `.env`.
+> ⚠️ **Penting:** aplikasi hanya memakai data yang benar-benar ada di CV kamu. Aplikasi tidak mengarang pengalaman, skill, atau jawaban. Kalau ada pertanyaan yang tidak bisa dijawab dari profil kamu, proses berhenti dan menunggu kamu.
 
-## Daily workflow
+---
 
-One-time setup in **Settings → Sources & email**: add Google Alerts RSS feeds, Telegram channels and/or company boards (Lever, Greenhouse), and your mailbox (Gmail App Password) for email applications. Then **Agent Control → Start agent**.
+# 📘 Tutorial untuk pemula
 
-After that the agent works on its own:
+Ikuti langkah berikut dari atas ke bawah. Tidak perlu paham pemrograman.
 
-1. **Discovery**: every few hours (default 6) and at the daily 08:00 (Asia/Jakarta) run, new listings are fetched from the enabled sources and de-duplicated.
-2. **Analysis**: score, hard filters and recommendation (auto-apply eligible / review / skip / reject).
-3. **Documents**: a tailored CV + cover letter (PDF & DOCX), application email and form answers for each eligible job.
-4. **Apply**, within the daily limit, eligible jobs only:
-   - listing asks for an email application → sent from your mailbox with the documents attached;
-   - employer application form (e.g. Lever / Greenhouse hosted page) → filled and submitted by the browser, stopping on anything unverified;
-   - everything else waits for you (review queue / assisted apply).
-5. **Notification** with the run summary (bell icon, optional webhook).
+**Daftar isi**
 
-You check **Applications** (table/Kanban) and update statuses (interview, assessment, rejected, accepted).
+1. [Yang kamu butuhkan](#1-yang-kamu-butuhkan)
+2. [Install program pendukung (sekali saja)](#2-install-program-pendukung-sekali-saja)
+3. [Download aplikasi](#3-download-aplikasi)
+4. [Menjalankan aplikasi](#4-menjalankan-aplikasi)
+5. [Login ke dashboard](#5-login-ke-dashboard)
+6. [Upload CV dan lengkapi profil](#6-upload-cv-dan-lengkapi-profil)
+7. [Atur preferensi pekerjaan](#7-atur-preferensi-pekerjaan)
+8. [Atur sumber lowongan](#8-atur-sumber-lowongan)
+9. [Atur email untuk melamar otomatis](#9-atur-email-untuk-melamar-otomatis)
+10. [Cari lowongan pertama kali](#10-cari-lowongan-pertama-kali)
+11. [Melihat hasil penilaian](#11-melihat-hasil-penilaian)
+12. [Membuat CV dan surat lamaran](#12-membuat-cv-dan-surat-lamaran)
+13. [Melamar](#13-melamar)
+14. [Menyalakan mode otomatis harian](#14-menyalakan-mode-otomatis-harian)
+15. [Memantau lamaran](#15-memantau-lamaran)
+16. [Rutinitas sehari-hari](#16-rutinitas-sehari-hari)
+17. [Masalah yang sering terjadi](#17-masalah-yang-sering-terjadi)
+18. [Pertanyaan umum (FAQ)](#18-pertanyaan-umum-faq)
 
-## Status
+## 1. Yang kamu butuhkan
 
-| Phase | Scope | Status |
+- Komputer **Windows 10 atau 11** dan koneksi internet.
+- **CV** dalam format **PDF atau Word (.docx)**. PDF harus berisi teks (bisa diblok/di-copy), **bukan hasil foto/scan**.
+- Sekitar **3 GB** ruang kosong di hard disk.
+- Opsional: akun **Gmail** (untuk melamar lewat email) dan akun **Telegram**.
+
+## 2. Install program pendukung (sekali saja)
+
+Aplikasi ini butuh dua program gratis: **Python** dan **Node.js**.
+
+**2.1 Install Python**
+
+1. Buka https://www.python.org/downloads/ lalu klik tombol kuning **Download Python 3.x.x** (versi 3.12 atau lebih baru).
+2. Buka file yang terdownload.
+3. **PENTING:** di jendela pertama, **centang kotak "Add python.exe to PATH"** di bagian bawah.
+4. Klik **Install Now**, tunggu sampai selesai, lalu klik **Close**.
+
+**2.2 Install Node.js**
+
+1. Buka https://nodejs.org/ lalu klik tombol versi **LTS**.
+2. Buka file yang terdownload, lalu klik **Next** terus sampai **Install**, lalu **Finish**. Pengaturan bawaan sudah benar.
+
+**2.3 Cek hasilnya**
+
+1. Tekan tombol **Windows**, ketik `cmd`, lalu tekan **Enter**.
+2. Ketik perintah berikut satu per satu, lalu tekan Enter:
+   ```
+   python --version
+   node --version
+   ```
+3. Kalau muncul nomor versi (misalnya `Python 3.13.1` dan `v22.12.0`), berarti berhasil.
+4. Kalau muncul *"is not recognized"* atau Microsoft Store terbuka, **restart komputer** lalu coba lagi. Kalau masih gagal, install ulang Python dan pastikan kotak *"Add python.exe to PATH"* dicentang.
+
+## 3. Download aplikasi
+
+1. Buka https://github.com/raflirasss/Auto-job-apply-using-ai
+2. Klik tombol hijau **Code**, lalu **Download ZIP**.
+3. Buka folder **Downloads**, klik kanan file ZIP, pilih **Extract All…**, lalu **Extract**.
+4. Pindahkan folder hasil extract ke tempat yang mudah dicari, misalnya **Desktop**.
+
+> Sudah biasa pakai Git? Cukup jalankan `git clone https://github.com/raflirasss/Auto-job-apply-using-ai.git`.
+
+## 4. Menjalankan aplikasi
+
+1. Buka folder aplikasi, lalu **klik dua kali file `start.bat`**.
+2. Kalau muncul peringatan biru *"Windows protected your PC"*, klik **More info**, lalu **Run anyway**. Ini normal untuk file yang didownload dari internet.
+3. Jendela hitam akan terbuka. **Pertama kali, prosesnya 5–15 menit** karena semua komponen didownload. Tunggu saja.
+4. Di awal muncul kotak hijau seperti ini:
+   ```
+   File .env dibuat. Password dashboard kamu:  Ab3dEf7hJk9m
+   ```
+   **Catat password ini**, karena dipakai untuk login.
+5. Kalau sudah siap, muncul tulisan `AI Job Hunter sudah jalan:  http://localhost:3000` dan browser terbuka otomatis.
+
+> ⚠️ **Jangan tutup jendela hitam itu** selama memakai aplikasi. Untuk mematikan aplikasi, klik jendela hitam lalu tekan **Ctrl + C**.
+
+Lain kali cukup klik dua kali `start.bat` lagi. Prosesnya sekitar 30 detik.
+
+**Lupa password?** Buka file `.env` di folder aplikasi dengan Notepad (klik kanan, lalu **Open with**, lalu **Notepad**) dan lihat baris `DASHBOARD_PASSWORD=`. Kamu bisa mengganti password di situ (minimal 8 karakter), lalu jalankan ulang `start.bat`.
+
+## 5. Login ke dashboard
+
+1. Kalau browser belum terbuka, buka **http://localhost:3000** di Chrome atau Edge.
+2. Masukkan password dari langkah 4, lalu klik **Sign in**.
+3. Menu di sebelah kiri:
+
+| Menu | Fungsinya |
+|---|---|
+| **Overview** | Ringkasan: jumlah lowongan, lamaran, interview |
+| **Job Discovery** | Daftar lowongan yang ditemukan |
+| **Applications** | Daftar lamaran dan statusnya |
+| **AI Analysis** | Skor kecocokan tiap lowongan |
+| **Documents** | CV asli serta CV dan surat lamaran yang dibuat |
+| **Agent Control** | Menyalakan/mematikan mode otomatis |
+| **Settings** | Semua pengaturan |
+
+Ikon bulan/matahari di kiri bawah untuk mode gelap/terang. Ikon lonceng 🔔 untuk notifikasi.
+
+## 6. Upload CV dan lengkapi profil
+
+Ini langkah **paling penting**: semua penilaian dan dokumen dibuat dari profil ini.
+
+1. Klik **Settings**, lalu tab **Candidate profile**.
+2. Klik **Upload CV (PDF or DOCX)** dan pilih file CV kamu. Profil terisi otomatis: nama, kontak, pendidikan, pengalaman, dan skill.
+3. **Periksa setiap bagian** dan perbaiki kalau ada yang salah baca.
+4. Di atas muncul kotak kuning berisi data yang tidak ada di CV. Yang bertanda **Required** wajib diisi:
+   - **Current domicile**: kota tempat tinggal (misalnya *Jakarta Timur*).
+   - **Expected monthly salary (IDR)**: gaji yang diharapkan per bulan.
+   - **Availability / start date**: kapan bisa mulai kerja (misalnya *immediately*).
+   - **Legally allowed to work in Indonesia**: pilih *Yes* kalau kamu WNI.
+5. Disarankan juga mengisi **Employment type** di setiap pengalaman kerja, serta **Certifications & projects** kalau ada.
+6. Di **Target job categories**, centang jenis pekerjaan yang kamu incar. Hanya kategori yang didukung isi CV yang bisa dicentang.
+7. Klik **Save & confirm** di bagian bawah layar. Kalau berhasil, muncul label hijau **Confirmed**.
+
+> ⚠️ Aplikasi tidak akan menilai lowongan atau membuat dokumen sebelum profil di-**confirm**.
+
+## 7. Atur preferensi pekerjaan
+
+**Settings**, lalu tab **Job preferences**:
+
+- **Accepted locations**: kota yang kamu mau (sudah terisi Jabodetabek).
+- **Work arrangement**: onsite / hybrid (remote dimatikan secara bawaan).
+- **Employment types**: full time / contract / dll.
+- **Minimum monthly salary (IDR)**: lowongan dengan gaji di bawah ini otomatis ditolak.
+- **Auto-apply threshold** (bawaan 85) dan **Review threshold** (bawaan 70).
+- **Daily application limit**: maksimal lamaran otomatis per hari (bawaan 10).
+- **Auto-apply**: nyalakan kalau mau aplikasi melamar sendiri.
+
+Klik **Save preferences**.
+
+## 8. Atur sumber lowongan
+
+Buka **Settings**, lalu tab **Sources & email**. Ada 3 sumber; boleh pakai satu, dua, atau semuanya.
+
+### 8.1 Google Alerts (paling disarankan)
+
+1. Buka https://www.google.com/alerts (login dengan akun Google).
+2. Ketik kata kunci, misalnya `"lowongan admin marketplace" jakarta`.
+3. Klik **Show options** (Tampilkan opsi). Di **Deliver to** (Kirim ke), pilih **RSS feed**, lalu klik **Create Alert** (Buat Notifikasi).
+4. Di daftar alert, klik **ikon RSS** (ikon oranye kecil) di sebelah alert tadi. Halaman baru terbuka. **Copy alamat dari address bar browser.**
+5. Kembali ke dashboard: nyalakan **Use RSS feeds**, klik **Add feed**, isi **Name** (misalnya *Admin Marketplace*), lalu tempel alamat tadi di kolom sebelahnya.
+6. Ulangi untuk posisi lain (**satu alert per posisi** paling bagus). Contoh kata kunci:
+   ```
+   "lowongan digital marketing" jakarta
+   "lowongan social media specialist" jakarta
+   "lowongan content creator" jakarta
+   ```
+7. Klik **Save sources** di bawah.
+
+> Google Alerts hanya memberi judul, link, dan ringkasan singkat. Untuk detail lengkap, buka link lowongannya.
+
+### 8.2 Channel Telegram
+
+1. Cari channel loker yang **masih aktif** di Telegram (misalnya cari "loker jakarta"). Pastikan postingannya baru.
+2. Lihat **username** channel (diawali `@`, ada di info channel).
+3. Di dashboard, nyalakan **Read Telegram job channels**, ketik `@namachannel` di **Public channels**, lalu tekan **Enter**. Ulangi untuk channel lain.
+4. **Read method**: pilih **Public web preview (t.me/s/…)**. Ini tidak perlu login.
+5. Klik **Save sources**.
+
+**(Opsional) Hubungkan akun Telegram** supaya hasil lebih lengkap:
+
+1. Buka https://my.telegram.org, login dengan nomor HP Telegram, lalu klik **API development tools**. Isi form singkat (App title/Short name bebas, misalnya *jobhunter*), lalu klik **Create application**.
+2. Catat **api_id** dan **api_hash**.
+3. Di dashboard isi **api_id**, **api_hash**, dan **Phone** (format `+62812…`), lalu klik **Send login code**.
+4. Masukkan kode yang dikirim ke aplikasi Telegram kamu (dan password verifikasi dua langkah kalau ada), lalu klik **Connect**.
+5. Ubah **Read method** menjadi **Telegram API (your account)**, lalu **Save sources**.
+
+> 🔒 Aplikasi hanya **membaca** channel yang kamu pilih. Aplikasi tidak pernah mengirim pesan, posting, atau bergabung ke grup.
+>
+> ⚠️ Waspada lowongan palsu. Aplikasi memberi tanda **WARNING** kalau postingan meminta biaya pendaftaran, deposit, atau "langsung kerja tanpa interview".
+
+### 8.3 Halaman karier perusahaan (Lever / Greenhouse)
+
+Kalau alamat halaman karier perusahaan incaran berbentuk:
+- `jobs.lever.co/`**namaperusahaan**: masukkan **namaperusahaan** ke **Lever companies**;
+- `job-boards.greenhouse.io/`**namaperusahaan**: masukkan ke **Greenhouse companies**.
+
+Nyalakan **Read company career boards**, lalu **Save sources**. Hanya lowongan di Indonesia atau kota pilihan kamu yang diambil. Kalau tidak tahu perusahaan mana yang memakai Lever/Greenhouse, matikan saja bagian ini.
+
+**Check sources every (hours)**: seberapa sering sumber dicek (bawaan setiap 6 jam, saat mode otomatis menyala).
+
+## 9. Atur email untuk melamar otomatis
+
+Supaya aplikasi bisa mengirim lamaran ke lowongan yang bilang "kirim CV ke hrd@…".
+
+**9.1 Buat App Password Gmail** (Gmail tidak mengizinkan aplikasi memakai password biasa):
+
+1. Aktifkan **Verifikasi 2 Langkah**: buka https://myaccount.google.com/security, lalu **2-Step Verification**.
+2. Buka https://myaccount.google.com/apppasswords, isi nama (misalnya `Job Hunter`), lalu klik **Create**.
+3. Muncul **16 huruf** (misalnya `abcd efgh ijkl mnop`). **Copy kode ini**, karena hanya muncul sekali.
+
+**9.2 Masukkan ke dashboard:** **Settings**, lalu **Sources & email**, lalu bagian paling bawah **Email applications (your mailbox)**:
+
+1. Isi **Your email address** (Gmail kamu), **Sender name** (nama lengkap), dan **App password** (16 huruf tadi).
+2. **SMTP server** `smtp.gmail.com`, **Port** `465`, dan **SSL** menyala. Semuanya sudah terisi otomatis.
+3. Klik **Save**, lalu **Test login**. Kalau muncul *"Login to the mail server succeeded"*, berarti berhasil. Tes ini tidak mengirim email apa pun.
+
+## 10. Cari lowongan pertama kali
+
+1. Buka menu **Job Discovery**, lalu klik **Check sources now**.
+2. Tunggu sampai tulisan **Checking…** selesai (biasanya kurang dari 1 menit).
+3. Muncul laporan per sumber (misalnya *"12 fetched, 10 new"*) dan daftar lowongan. Label **apply by email** artinya lowongan itu bisa dilamar lewat email.
+
+Kalau hasilnya 0, baca pesan di bawah nama sumber. Misalnya *"no recent posts"* berarti channel Telegram itu sudah tidak aktif. Mau menambah lowongan sendiri? Klik **Add manually**.
+
+## 11. Melihat hasil penilaian
+
+1. Buka menu **AI Analysis**, lalu klik **Analyse new**.
+2. Lowongan dikelompokkan menjadi:
+
+| Kelompok | Artinya |
+|---|---|
+| **Auto-apply eligible** | Skor ≥ 85 dan semua syarat jelas. Boleh dilamar otomatis. |
+| **Review queue** | Skor 70–84, atau gaji/lokasi tidak jelas. Sebaiknya kamu cek dulu. |
+| **Skipped** | Skor di bawah 70. Kurang cocok. |
+| **Rejected** | Gagal syarat wajib: gaji terlalu kecil, lokasi tidak sesuai, full remote, skill wajib tidak punya, dll. |
+
+3. Klik sebuah lowongan untuk melihat **Score breakdown** (skill 35%, pengalaman 25%, judul 15%, pendidikan 10%, lokasi 10%, gaji 5%), **Matching skills** (hijau), **Missing skills** (merah), dan **Concerns**.
+
+## 12. Membuat CV dan surat lamaran
+
+1. Di detail lowongan, buka tab **Documents**.
+2. Pilih **Template** (Classic / Modern) dan **Language**, lalu klik **Generate documents**.
+3. Download **CV** dan **Cover letter** (PDF dan Word), teks **Email**, serta **Form answers**.
+
+Isi CV tetap sama dengan CV asli kamu. Yang berubah hanya urutannya: skill dan pengalaman yang relevan dengan lowongan tampil lebih dulu. Tidak ada yang ditambah-tambahkan. Semua versi tersimpan di menu **Documents**.
+
+## 13. Melamar
+
+Di detail lowongan, buka tab **Apply**. Tombol yang muncul tergantung jenis lowongannya:
+
+| Tombol | Kapan muncul | Apa yang terjadi |
 |---|---|---|
-| 1 | Backend, DB + migrations, auth, dashboard, CV import & profile editor | ✅ |
-| 2 | Discovery: Google Alerts RSS, Telegram channels, Lever & Greenhouse public APIs; URL normalization, dedup | ✅ |
-| 3 | Matching engine, hard filters, explanations | ✅ |
-| 4 | Tailored CV / cover letter (PDF+DOCX), email, form answers, versioning | ✅ |
-| 5 | Apply by email (SMTP) and by browser (auto / assisted), safety stops, confirmation tracking | ✅ |
-| 6 | APScheduler daily runs, retries, crash recovery, notifications, Docker | ✅ |
+| **Apply by email** | Lowongan punya alamat email lamaran | CV dan surat lamaran dikirim dari Gmail kamu. Ada konfirmasi dulu. |
+| **Auto apply** | Lowongan punya form online | Browser mengisi dan mengirim form sendiri. Berhenti kalau ada CAPTCHA, login, atau pertanyaan yang tidak bisa dijawab. |
+| **Assisted apply** | Lowongan punya form online | Browser terbuka dan data terisi otomatis, tapi **kamu sendiri yang cek dan klik kirim**. |
 
-No integration is simulated; statistics come only from real DB rows.
+- Lamaran lewat **email** atau **auto apply** yang berhasil: status otomatis menjadi **Applied**.
+- Lamaran lewat **assisted apply**: setelah kamu kirim, buka tab **Status**, pilih **Applied**, isi kolom konfirmasi (misalnya *"email konfirmasi 12 Nov"*), lalu klik **Update status**.
+
+> ⚠️ Aplikasi **tidak pernah** membobol CAPTCHA, mengisi data sensitif (NIK, agama, tanggal lahir, rekening…), mencentang pernyataan atas nama kamu, menebak jawaban, atau menganggap lamaran terkirim tanpa bukti. Kalau menemui hal itu, prosesnya berhenti dan status menjadi **Pending action** beserta penjelasannya.
+
+## 14. Menyalakan mode otomatis harian
+
+1. Pastikan di **Settings → Job preferences**, **Auto-apply** menyala.
+2. Buka **Agent Control**, lalu klik **Start agent**.
+
+Mulai sekarang, **setiap hari jam 08:00 WIB** (dan cek sumber tiap 6 jam), aplikasi otomatis mencari lowongan baru, menilai, membuat dokumen, melamar sampai batas harian, lalu mengirim ringkasan ke ikon 🔔.
+
+Tombol lain: **Pause** / **Resume** (berhenti sementara), dan **Run now** (jalankan sekarang tanpa menunggu jam 08:00).
+
+> ⚠️ Mode otomatis **hanya berjalan selama jendela `start.bat` terbuka dan komputer menyala**. Kalau komputer mati jam 08:00, proses tetap jalan asalkan aplikasi dinyalakan paling lambat 1 jam setelahnya. Kalau lebih dari itu, proses hari itu dilewati.
+
+## 15. Memantau lamaran
+
+Buka menu **Applications**:
+- tampilan **Table** atau **Kanban** (New, Qualified, Pending action, Applied, Interview, Closed);
+- kotak pencarian dan filter status;
+- klik sebuah lamaran, buka tab **Status**, lalu ubah statusnya saat ada kabar: **Interview**, **Assessment**, **Rejected**, **Accepted**.
+
+Menu **Overview** menampilkan ringkasan angka dan tingkat keberhasilan.
+
+## 16. Rutinitas sehari-hari
+
+1. Klik dua kali `start.bat` (kalau belum jalan).
+2. Cek ikon 🔔 untuk ringkasan hari ini.
+3. **Applications**: selesaikan yang berstatus **Pending action**.
+4. **AI Analysis**, lalu **Review queue**: lamar sendiri yang menurut kamu menarik.
+5. Update status kalau ada panggilan interview atau penolakan.
+
+## 17. Masalah yang sering terjadi
+
+| Masalah | Solusi |
+|---|---|
+| `start.bat` langsung tertutup / *Python belum terpasang* | Install Python dari https://www.python.org/downloads/ dan **centang "Add python.exe to PATH"**. Restart komputer. |
+| *Node.js belum terpasang* | Install Node.js versi LTS dari https://nodejs.org/, lalu restart komputer. |
+| Instalasi paket gagal | Cek koneksi internet, lalu klik `start.bat` lagi. |
+| *Port 3000/8000 dipakai program lain* | Tutup program yang disebut di pesan error, lalu klik `start.bat` lagi. |
+| Dashboard 500 / *backend server is not running* | Pastikan jendela hitam terbuka. Tutup semua, lalu klik `start.bat` lagi. Script baru akan membersihkan proses lama otomatis. |
+| Lupa password | Buka `.env` dengan Notepad, lihat/ganti `DASHBOARD_PASSWORD=` (minimal 8 karakter). Restart aplikasi. |
+| Login salah 5 kali | Tunggu 5 menit. |
+| CV tidak terbaca / profil kosong | CV mungkin hasil scan/foto. Gunakan PDF hasil Save as PDF dari Word/Canva, atau file `.docx`. |
+| Tidak bisa **Save & confirm** | Masih ada pertanyaan **Required** yang kosong di kotak kuning. |
+| **Test login** Gmail gagal | Pakai **App Password 16 huruf**, bukan password Gmail biasa. Verifikasi 2 Langkah harus aktif. |
+| Telegram *no recent posts* | Channel tidak aktif atau privat. Ganti dengan channel yang masih aktif. |
+| Google Alerts kosong | Alert baru bisa butuh waktu. Coba kata kunci yang lebih umum. |
+| Lamaran berhenti dengan CAPTCHA/login/unresolved fields | Ini disengaja demi keamanan. Gunakan **Assisted apply** dan selesaikan sendiri. |
+
+## 18. Pertanyaan umum (FAQ)
+
+**Apakah aplikasi memakai AI berbayar?**
+
+Tidak wajib. Penilaian, CV, dan surat lamaran dibuat dengan aturan tetap tanpa biaya. AI hanya opsional untuk **Generate AI explanation** dan harus diatur di **Settings → AI & scheduler**.
+
+**Apakah data saya aman?**
+
+CV, profil, dan lamaran tersimpan di folder `data/` di komputer kamu. Password email, session Telegram, dan API key disimpan terenkripsi. Jangan commit `.env` atau `data/`.
+
+**Apakah aplikasi melamar ke semua lowongan otomatis?**
+
+Tidak. Hanya lowongan dengan skor tinggi (`auto_apply_eligible`), lolos hard filter, dokumen tersedia, dan metode lamaran yang diizinkan. Email otomatis perlu SMTP. Form otomatis berhenti pada CAPTCHA, login, OTP, data sensitif, atau pertanyaan yang tidak dikenal.
+
+**Apakah CV asli diubah?**
+
+Tidak. CV asli tidak pernah ditimpa. Dokumen khusus lowongan disimpan sebagai versi baru.
+
+**Bagaimana update aplikasi?**
+
+Download ZIP terbaru dari GitHub, lalu salin `data/` dan `.env` dari folder lama ke folder baru. Jalankan `start.bat`.
+
+**Bagaimana menghapus data?**
+
+Tutup aplikasi, lalu hapus folder `data/` dan file `.env`. Saat `start.bat` dijalankan lagi, semuanya mulai dari awal.
+
+## Dokumentasi teknis
+
+<!--TUTORIAL-END-->
+
+Di bawah ini detail arsitektur, API, keamanan, testing, dan deployment untuk developer.
 
 ## Layout
 
