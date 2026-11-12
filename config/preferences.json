@@ -1,0 +1,39 @@
+{
+  "job_sources": [
+    "rss",
+    "telegram",
+    "ats"
+  ],
+  "location": [
+    "Jakarta",
+    "Jakarta Pusat",
+    "Jakarta Selatan",
+    "Jakarta Barat",
+    "Jakarta Timur",
+    "Jakarta Utara",
+    "Tangerang",
+    "Tangerang Selatan",
+    "Bekasi",
+    "Depok"
+  ],
+  "work_arrangement": [
+    "hybrid",
+    "onsite"
+  ],
+  "employment_types": [
+    "full_time",
+    "contract"
+  ],
+  "minimum_salary": 3500000,
+  "salary_currency": "IDR",
+  "salary_period": "monthly",
+  "allow_undisclosed_salary_review": true,
+  "search_frequency": "daily",
+  "lookback_days": 7,
+  "minimum_match_score": 85,
+  "review_threshold": 70,
+  "auto_apply": true,
+  "daily_application_limit": 10,
+  "avoid_duplicates": true,
+  "allow_remote": false
+}

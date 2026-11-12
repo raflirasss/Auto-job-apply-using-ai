@@ -1,0 +1,23 @@
+{
+  "_comment": "Example only. The real config/candidate.json is generated from your CV import, contains personal data and is git-ignored.",
+  "schema_version": 1,
+  "personal": {"full_name": null, "email": null, "phone": null, "location": null, "websites": []},
+  "summary": null,
+  "education": [],
+  "experience": [],
+  "skills": [],
+  "soft_skills": [],
+  "languages": [],
+  "certifications": [],
+  "projects": [],
+  "achievements": [],
+  "target_job_categories": [],
+  "application_facts": {
+    "expected_salary_monthly_idr": null,
+    "notice_period": null,
+    "availability_date": null,
+    "willing_to_relocate": null,
+    "has_work_authorization_indonesia": null
+  },
+  "missing_information": []
+}

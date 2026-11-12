@@ -1,0 +1,19 @@
+{
+  "rss": {
+    "enabled": false,
+    "feeds": []
+  },
+  "telegram": {
+    "enabled": false,
+    "method": "preview",
+    "channels": [],
+    "messages_per_channel": 100,
+    "api_id": null
+  },
+  "ats": {
+    "enabled": true,
+    "lever": ["ninjavan"],
+    "greenhouse": ["xendit"]
+  },
+  "fetch_interval_hours": 6
+}

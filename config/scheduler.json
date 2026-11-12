@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "run_time": "08:00",
+  "timezone": "Asia/Jakarta",
+  "max_retries": 3,
+  "paused": false
+}

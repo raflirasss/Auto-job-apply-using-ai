@@ -1,0 +1,16 @@
+from app.models.entities import (  # noqa: F401
+    AgentEvent,
+    AgentRun,
+    Application,
+    ApplicationStatus,
+    ApplicationStatusHistory,
+    ApplyAttempt,
+    AppSetting,
+    Notification,
+    CandidateProfile,
+    CandidateProfileVersion,
+    CVFile,
+    Document,
+    Job,
+    StoredCredential,
+)
